@@ -1,19 +1,34 @@
-node {
-    
-    def rtMaven = Artifactory.newMavenBuild()
-    def buildInfo
+pipeline {
+	agent any
 
-    stage('Clone sources') {
-        git url: 'https://github.com/Nikkithakur/Jenkins-Pipeline-Mavenproject.git'
-    }
+	stages {
 
+		stage ('Git Checkout') {
 
-    stage('Maven Test') {
-       rtMaven.run pom: 'Jenkins-Pipeline-Mavenproject/pom.xml', goals: 'clean test'
-    }
+			steps {
+						git credentialsId: 'github' , url:'https://github.com/Nikkithakur/Jenkins-Pipeline-Mavenproject.git'
+			}
+		}
+		
+		
+		
+		
+		stage ('Compile Stage') {
 
-    stage('Maven Build') {
-       rtMaven.run pom: 'Jenkins-Pipeline-Mavenproject/pom.xml', goals: 'clean install'
-    }
-}
+			steps {
+				withMaven(maven: 'Maven') {
+					sh 'mvn clean compile'
+				}
+			}
+		}
 
+		stage ('Testing Stage') {
+
+			steps {
+				withMaven(maven: 'Maven') {
+					sh 'mvn test'
+				}
+			}
+		}
+	}
+}		
