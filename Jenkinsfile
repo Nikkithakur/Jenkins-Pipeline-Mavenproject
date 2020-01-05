@@ -6,13 +6,13 @@ pipeline {
         jdk 'JDK_8'
     }
     stages {
-        stage('Compile stage') {
+        stage('Compile') {
             steps {
                 bat "mvn clean compile" 
         }
     }
 
-         stage('testing stage') {
+         stage('Tests') {
              steps {
                 bat "mvn test"
         }
